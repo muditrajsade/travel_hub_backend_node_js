@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickable Box</title>
+    <style>
+        /* Style for the clickable box */
+        .box {
+            width: 50px; /* Adjust the width of the box */
+            height: 50px; /* Adjust the height of the box *//* Adjust the height of the box */
+            background-color: gray; /* Adjust the background color of the box */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        
+    </style>
+</head>
+<body>
+    <p>row</p>
+    <input type="text" id="row"/>
+    <p>column</p>
+    <input type="text" id="col"/>
+    <p>space</p>
+    <input type="text" id="spc_one"/>
+    <p>space</p>
+    <input type="text" id="spc_two"/>
+    <p>flight_number</p>
+    <input type="text" id="flight_number"/>
+    <p>time</p>
+    <input type="text" id="time"/>
+    <p>day</p>
+    <input type="text" id="day"/>
+    <p>month</p>
+    <input type="text" id="month"/>
+    <p>year</p>
+    <input type="text" id="year"/>
+    <p>company</p>
+    <input type = "text" id="company"/>
+    <p>type_of_flight</p>
+    <input type = "text" id="type_of_flight"/>
+    <p>start</p>
+    <input type="text" id="start_location"/>
+    <p>end</p>
+    <input type="text" id="end_location"/>
+    <p>pricing</p>
+    <input type="text" id="price_per_seat"/>
+    <button id="button">generate seats</button>
+
+
+
+
+<div class="table"></div>
+
+</body>
+
+<script>
+    let variables=[];
+    document.querySelector("#button").addEventListener("click",function(){
+
+        let a = document.querySelector("#row").value;
+        let b = document.querySelector("#col").value;
+        let sp_c = document.querySelector("#spc_one").value;
+        let scp_r = document.querySelector("#spc_two").value;
+        let aval = parseInt(a);
+        let bval = parseInt(b);
+        let rwq = parseInt(sp_c);
+        let rdx = parseInt(scp_r);
+
+        let alphabets = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        let r_alpha = [];
+        for(let xaq = 0;xaq < bval;xaq++){
+
+            r_alpha[xaq] = alphabets[xaq];
+
+        }
+        
+
+        let v = document.querySelector(".table");
+
+        let h = document.createElement("table");
+        let ab = 0;
+        let ind=0;
+
+        for(let j = 0;j<aval;j++){
+            let k = h.insertRow();
+            for(let r=0;r<bval;r++){
+                let i = k.insertCell();
+                
+                let vj = document.createElement("div");
+                
+                let text = (j+1) + r_alpha[r]
+                vj.innerText = text;
+                vj.className="box";
+                vj.id=text;
+                
+                
+                vj.onclick=(e)=>{
+                    
+                   
+                    if(e.target.style.backgroundColor == "grey" || e.target.style.backgroundColor =="" ){
+                        e.target.style.backgroundColor="green";
+                        variables.push(e.target.id);
+
+                    }
+                    else{
+                        e.target.style.backgroundColor="grey";
+                        let vard=[];
+                        for(sd=0;sd<variables.length;sd++){
+                            if(variables[sd] == e.target.id){
+                                continue;
+                            }
+                            else{
+                                vard.push(variables[sd]);
+                            }
+                        }
+
+                        variables=vard;
+
+                    }
+                    console.log(variables);
+                    
+                    
+
+                }
+
+                if(ind==0){
+                    if(r==sp_c-1){
+                        i.style.paddingRight="30px";
+                        ind=1;
+                    }
+                }
+                if(ind == 1){
+                    if(r == scp_r-1){
+                        i.style.paddingRight="30px";
+                        ind=2;
+
+                    }
+
+                }
+                    
+                    
+                
+                i.appendChild(vj);
+                ab++;
+                
+                
+
+            }
+            ind=0;
+
+            
+
+            
+        }
+
+        v.appendChild(h);
+        let rgf = document.createElement("button");
+        rgf.innerText="SUBMIT AVAILABLE SEATS";
+
+        
+        
+        
+
+        rgf.onclick = async()=>{
+
+            let flight_number = document.querySelector("#flight_number").value;
+            let company = document.querySelector("#company").value;
+            let type = document.querySelector("#type_of_flight").value;
+            let rows = document.querySelector("#row").value;
+            let col = document.querySelector("#col").value;
+            let gap_one = document.querySelector("#spc_one").value;
+            let gap_two = document.querySelector("#spc_two").value;
+            let start = document.querySelector("#start_location").value;
+            let end = document.querySelector("#end_location").value;
+            let day = document.querySelector("#day").value;
+            let month = document.querySelector("#month").value;
+            let year = document.querySelector("#year").value;
+            let time = document.querySelector("#time").value;
+            let price_per_seat = document.querySelector("#price_per_seat").value;
+
+            let fr_data={id:flight_number,company:company,type:type,rows:rows,cols:col,gap_one:gap_one,gap_two:gap_two,seats_avl:variables.length,from:start,to:end,day:day,month:month,year:year,time:time,seats:variables,price:price_per_seat};
+            console.log("hello");
+            console.log(fr_data);
+            let ans = await fetch("http://localhost:8000/add_flight",{
+                method:"POST",
+                headers:{'content-type': 'application/json'},
+                body:JSON.stringify(fr_data),
+                
+
+            });
+            console.log(ans);
+            
+        }
+        document.body.appendChild(rgf);
+
+
+
+
+    })
+</script>
+</html>
